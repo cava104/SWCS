@@ -1,2 +1,6 @@
-v0.001
+vPre-Alpha 0.001
  - Nuovo Menu principale;
+vPre-Alpha 0.002
+ - Inclusione librerie: stdlib.h e windows.h;
+ - Aggiunta del tema del menu principale;
+ - Aggiunta suono pulsanti (BUG: NON VA UN CAZZO);
