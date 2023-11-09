@@ -5,13 +5,15 @@
 
 //ci metti le robe per fare i drink o cibo idk
 struct Inventory{
-	int temp;
+	int x;
+
+	int y;
 };
 
 //praticamente il player
 struct Bar{		
 	unsigned int Money;
-	int level;
+	unsigned int day;
 	struct Inventory* Inv;
 };
 
@@ -28,10 +30,12 @@ const char drinks[NUM_DRINKS][10] = {""};
 struct Bar* Init();
 struct Clients* newClient();
 
-int SaveData(int currentSlot,struct Bar* Bar);
-int LoadData(int Slot,struct Bar *Bar);
+void Menu(struct Bar* bar);
 
-void displayGame(struct Bar* Bar,struct Clients* CurrentClient);
+int SaveData(int currentSlot,struct Bar* bar);
+int LoadData(int Slot,struct Bar *bar);
+
+void displayGame(struct Bar* bar,struct Clients* CurrentClient);
 void Dialogs(); 
 
 void gotoxy(int x,int y);
