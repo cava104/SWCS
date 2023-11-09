@@ -1,6 +1,3 @@
-#ifndef FUNZIONI_H
-#define FUNZIONI_H
-
 #define BUFFER 256
 
 #define NUM_DRINKS 2
@@ -38,5 +35,3 @@ void displayGame(struct Bar* Bar,struct Clients* CurrentClient);
 void Dialogs(); 
 
 void gotoxy(int x,int y);
-
-#endif
