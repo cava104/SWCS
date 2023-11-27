@@ -66,6 +66,13 @@ bool FileExist(int Slot){
     return true;
 }
 
+void InitPlayer(struct Player* player){
+    player->Credit = 1000;
+    int i;
+    for(i = 0; i < Lenght(player->inv); i++);
+
+}
+
 void MainMenu(struct Bar* bar){
     system("cls");
     printf("Star Wars: Cantina Simulator\n\n");

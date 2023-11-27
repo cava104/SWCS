@@ -1,35 +1,31 @@
-//ci metti le robe per fare i drink o cibo idk
 struct Inventory{
-	int carlos;
-
-	int moli;
+	//snack
+	int Meiloorun;
+	int BanthaTartare;
+	int FruitPie;
+	int MillaFlowerToast;
+	int BatuuBits;
+	int MantellMits;
+	int OgasObsession;
+	int OutpostMix;
+	int WookieeCookie;
+	int MossChip;
+	int FlashFriedZuchii;
+	int CrackNut;
+	//Bibite
+	int Alcohol;
+	int Ardees;
+	int JetJuice;
+	int Revnog;
+	int MooganTea;
 };
 
-//praticamente il player
-struct Bar{		
-	int Money;
-	int day;
-	struct Inventory Inv;
+struct Player{
+	int Credit;
+	struct Inventory inv;	
 };
-
-//cliente
-struct Clients{
-	char* Name;
-	char* affiliation;
-	char* Order;
-};
-
-const char affiliations[3][10] = {"Empire","Rebel","Civilians"};
-
-struct Bar* Init();
-struct Clients* newClient();
 
 void Menu(struct Bar* bar);
 
 int SaveData(int currentSlot,struct Bar* bar);
 int LoadData(int Slot,struct Bar *bar);
-
-void displayGame(struct Bar* bar,struct Clients* CurrentClient);
-void Dialogs(); 
-
-void gotoxy(int x,int y);
