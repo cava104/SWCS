@@ -4,7 +4,6 @@
 #include <string.h>
 #include <conio.h>
 #include <stdbool.h>
-#include <sys/stat.h>
     
 #define DataPath "data/Save"
 
@@ -14,7 +13,7 @@ int SaveData(int currentSlot,struct Bar* bar){
     char* SavePath = (char*)malloc(strlen(DataPath)+strlen(str)+4);
     strcpy(SavePath,DataPath);
     strcat(SavePath,str);
-    strcat(SavePath,".Txt");
+    strcat(SavePath,".txt");
     FILE* Save = fopen(SavePath,"wb");
 
     if(!Save){
@@ -34,7 +33,7 @@ int LoadData(int Slot,struct Bar* bar){
     char* LoadPath = (char*)malloc(strlen(DataPath)+strlen(str)+4);
     strcat(LoadPath,DataPath);
     strcat(LoadPath,str);
-    strcat(LoadPath,".Txt");
+    strcat(LoadPath,".txt");
     FILE* Load = fopen(LoadPath,"rb");
 
     if(!Load){
@@ -56,11 +55,11 @@ bool FileExist(int Slot){
     char* findFile = (char*)malloc(strlen(DataPath)+strlen(str)+4);
     strcat(findFile,DataPath);
     strcat(findFile,str);
-    strcat(findFile,".Txt");
+    strcat(findFile,".txt");
 
     FILE* file = fopen(findFile,"r");
 
-    if(!file){
+    if(file == NULL){
         return false;
     }
     free(findFile);
@@ -72,27 +71,30 @@ void MainMenu(struct Bar* bar){
     printf("Star Wars: Cantina Simulator\n\n");
 	printf("1) Nuova Partita:\n");
 	printf("2) Carica Partita:\n\n");
-	printf("v0.002\n");
+	printf("v0.003\n");
+    int i;
 
     char ch;
     switch(ch = getch()){
         case '1':
-            printf("Seleziona lo slot:");
-            for(int i = 0; i <= 4; i++){
-                if(FileExist(i)){
-                    printf("%d) Data %d\n",i,i);
+        	system("cls");
+            printf("Seleziona lo slot di salvataggio:\n");
+            for(i = 1; i <= 5; i++){
+                if(FileExist(i) == true){
+                    printf("%d) Slot %d\n",i,i);
                 }
-                else printf("%d) Nuova Partita\n",i);
+                else printf("%d) | SLOT VUOTO |\n",i);
             }
         break;
 
         case '2':
-            printf("Seleziona lo slot:");
-            for(int i = 0; i < 4; i++){
-                if(FileExist(i)){
-                    printf("%d) Data %d\n",i,i);
+        	system("cls");
+            printf("Seleziona lo slot:\n");
+            for(i = 1; i <= 5; i++){
+                if(FileExist(i) == true){
+                    printf("%d) Slot %d\n",i,i);
                 }
-                else printf("%d) No Data\n",i);
+                else printf("%d) | SLOT VUOTO |\n",i);
             }
         break;
 

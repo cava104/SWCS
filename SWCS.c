@@ -5,6 +5,6 @@
 int main(){
     struct Bar plr;
     
-
+	SaveData(1,&plr);
     MainMenu(&plr);
 }

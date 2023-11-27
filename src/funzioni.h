@@ -1,20 +1,15 @@
-#define BUFFER 256
-
-#define NUM_DRINKS 2
-#define MAX_QUEUE 10
-
 //ci metti le robe per fare i drink o cibo idk
 struct Inventory{
-	int x;
+	int carlos;
 
-	int y;
+	int moli;
 };
 
 //praticamente il player
 struct Bar{		
-	unsigned int Money;
-	unsigned int day;
-	struct Inventory* Inv;
+	int Money;
+	int day;
+	struct Inventory Inv;
 };
 
 //cliente
@@ -25,7 +20,6 @@ struct Clients{
 };
 
 const char affiliations[3][10] = {"Empire","Rebel","Civilians"};
-const char drinks[NUM_DRINKS][10] = {""};
 
 struct Bar* Init();
 struct Clients* newClient();
