@@ -5,14 +5,19 @@
 #include <conio.h>
 #include <stdbool.h>
     
-#define DataPath "data/Save"
+#define DataPath "data/"
+
+char IntToChar(int val){
+   return char ch = '0' + val; 
+}
 
 int SaveData(int currentSlot,struct Bar* bar){
     char* str  = malloc(2);
     sprintf(str,"%d",currentSlot);
     char* SavePath = (char*)malloc(strlen(DataPath)+strlen(str)+4);
     strcpy(SavePath,DataPath);
-    strcat(SavePath,str);
+    strcat(SavePath,"Save-");
+    strcat(SavePath,IntToChar(currentSlot);
     strcat(SavePath,".txt");
     FILE* Save = fopen(SavePath,"wb");
 
@@ -31,9 +36,10 @@ int LoadData(int Slot,struct Bar* bar){
     char* str = malloc(2);
     sprintf(str,"%d",Slot);
     char* LoadPath = (char*)malloc(strlen(DataPath)+strlen(str)+4);
-    strcat(LoadPath,DataPath);
-    strcat(LoadPath,str);
-    strcat(LoadPath,".txt");
+    strcpy(SavePath,DataPath);
+    strcat(SavePath,"Save-");
+    strcat(SavePath,IntToChar(currentSlot);
+    strcat(SavePath,".txt");
     FILE* Load = fopen(LoadPath,"rb");
 
     if(!Load){
@@ -53,9 +59,10 @@ bool FileExist(int Slot){
     char* str = malloc(2);
     sprintf(str,"%d",Slot);
     char* findFile = (char*)malloc(strlen(DataPath)+strlen(str)+4);
-    strcat(findFile,DataPath);
-    strcat(findFile,str);
-    strcat(findFile,".txt");
+    strcpy(SavePath,DataPath);
+    strcat(SavePath,"Save-");
+    strcat(SavePath,IntToChar(currentSlot);
+    strcat(SavePath,".txt");
 
     FILE* file = fopen(findFile,"r");
 
@@ -64,49 +71,4 @@ bool FileExist(int Slot){
     }
     free(findFile);
     return true;
-}
-
-void InitPlayer(struct Player* player){
-    player->Credit = 1000;
-    int i;
-    for(i = 0; i < Lenght(player->inv); i++);
-
-}
-
-void MainMenu(struct Bar* bar){
-    system("cls");
-    printf("Star Wars: Cantina Simulator\n\n");
-	printf("1) Nuova Partita:\n");
-	printf("2) Carica Partita:\n\n");
-	printf("v0.003\n");
-    int i;
-
-    char ch;
-    switch(ch = getch()){
-        case '1':
-        	system("cls");
-            printf("Seleziona lo slot di salvataggio:\n");
-            for(i = 1; i <= 5; i++){
-                if(FileExist(i) == true){
-                    printf("%d) Slot %d\n",i,i);
-                }
-                else printf("%d) | SLOT VUOTO |\n",i);
-            }
-        break;
-
-        case '2':
-        	system("cls");
-            printf("Seleziona lo slot:\n");
-            for(i = 1; i <= 5; i++){
-                if(FileExist(i) == true){
-                    printf("%d) Slot %d\n",i,i);
-                }
-                else printf("%d) | SLOT VUOTO |\n",i);
-            }
-        break;
-
-        default:
-        MainMenu(bar);
-        break;
-    }
 }
