@@ -21,4 +21,7 @@ int LoadData(int Slot,struct Bar *bar);
 
 void InitPlayer(struct Player* player);
 
+void display_screen();
+void clear_screen();
+
 #endif

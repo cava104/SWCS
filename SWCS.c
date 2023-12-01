@@ -5,5 +5,5 @@ int main(){
     struct Player player;
     InitPlayer(&player);
 
-    MainMenu(&plr);
+    MainMenu(&player);
 }
