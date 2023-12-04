@@ -17,7 +17,7 @@ int SaveData(int currentSlot,struct Bar* bar){
     char* SavePath = (char*)malloc(strlen(DataPath)+strlen(str)+4);
     strcpy(SavePath,DataPath);
     strcat(SavePath,"Save-");
-    strcat(SavePath,IntToChar(currentSlot);
+    strcat(SavePath,IntToChar(currentSlot));
     strcat(SavePath,".txt");
     FILE* Save = fopen(SavePath,"wb");
 
