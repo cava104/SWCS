@@ -105,13 +105,13 @@ for(y = 0; y < Height; y++){
 
 }
 
-void DrawSprite(char sprite[][64] ){
+void DrawSprite(char sprite[8][16] ){
 
-int xl=16,yl=8;
-int x,y;
+//int xl=16,yl=8;
+int x=16,y=8;
 
-  for(y=0; y<y+xl; y++){
-    for(x=0; x<x+xl; x++)
+  for(y=0; y<8; y++){
+    for(x=0; x<16; x++)
 
         screen[y][x] = sprite[y][x];
   }
