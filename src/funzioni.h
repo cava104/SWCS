@@ -14,6 +14,10 @@ struct Player{
 	int day;
 };
 
+struct Client(){
+	char* name;
+	char** order;
+}
 void Menu(struct Bar* bar);
 
 int SaveData(int currentSlot,struct Bar* bar);
