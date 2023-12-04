@@ -49,8 +49,8 @@
 #include <windows.h>
 #include "sprite.h"
 
-#define Height 40
-#define Width 80
+#define Height 25
+#define Width 100
 
 void PrintScreen();
 void ClearScreen();
@@ -90,23 +90,32 @@ void ClearScreen(){
 }
 
 void border(){
-	int x=0, y=0;
-	for(y = 0; y < Height; y++){
-	    for(x = 0; x < Width; x++){
-	      if(x==0 || y==0 || x==Width-1 || y==Height - 1){
-	        
-	        screen[y][x] = '#';
-	
-	      }
-	    }
-	  }
+
+int x=0, y=0;
+for(y = 0; y < Height; y++){
+    for(x = 0; x < Width; x++){
+      if(x==0 || y==0 || x==Width-1 || y==Height - 1){
+        
+        screen[y][x] = '#';
+
+      }
+    }
+  }
+
+
 }
 
-void DrawSprite(char sprite[8][16], int xl, int yl){
-	int x = xl + 16 ,y = yl + 8;
+void DrawSprite(char sprite[8][16] ){
 
-	for(yl; yl<y; yl++){
-	    for(xl; xl<x; xl++)
-			screen[xl][yl] = sprite[xl][yl];
-	}
+//int xl=16,yl=8;
+int x=16,y=8;
+
+  for(y=0; y<8; y++){
+    for(x=0; x<16; x++)
+
+        screen[y][x] = sprite[y][x];
+  }
 }
+
+
+

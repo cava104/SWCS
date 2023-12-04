@@ -4,11 +4,10 @@
 
 int main(){
     InitScreen();
-	border();
-	PrintScreen();
-	DrawSprite(sprite, 10, 10);
-	
-	PrintScreen();
+border();
+DrawSprite(sprite);
+
+PrintScreen();
 
 
 }
