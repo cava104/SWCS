@@ -105,17 +105,16 @@ for(y = 0; y < Height; y++){
 
 }
 
-void DrawSprite(char sprite[8][16] ){
-
-//int xl=16,yl=8;
-int x=16,y=8;
-
-  for(y=0; y<8; y++){
-    for(x=0; x<16; x++)
-
-        screen[y][x] = sprite[y][x];
-  }
+void DrawSprite(char sprite[8][16], int xl, int yl){
+	int x=xl+16, y=yl+8;
+	int i = -1, j = -1;
+  	for(yl; yl<y; yl++){
+  		i++;
+	    for(xl; xl<x; xl++){
+			j++;
+	        screen[yl][xl] = sprite[i][j];
+		}
+		xl -= 16;
+		j=-1;
+  	}
 }
-
-
-
