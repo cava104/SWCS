@@ -1,6 +1,6 @@
 #include "funzioni.h"
 
-void InitPlayer(struct Player* player){
+void InitPlayer(struct Player* player){ //Funzione che mina i bit coin
     player->Credit = 1000;
     player->day = 0;
     player->Inv = malloc(sizeof(int)*ArrayLenght(FoodNames));
@@ -10,4 +10,3 @@ void InitPlayer(struct Player* player){
         player->Inv[i] = 0;
     }
 }
-
