@@ -106,7 +106,8 @@ for(y = 0; y < Height; y++){
 
 }
 
-void DrawSprite(char sprite[8][16], int xl, int yl){
+void DrawSprite(char sprite[8][16]){
+  int xl = 42, yl = 5;
 	int x=xl+16, y=yl+8;
 	int i = -1, j = -1;
   	for(yl; yl<y; yl++){
@@ -120,19 +121,57 @@ void DrawSprite(char sprite[8][16], int xl, int yl){
   	}
 }
 int Check=0;
-char RandSprite(){
+int RandSprite(){
 
   int Num=0;
   if(Check == 0)
     srand(time(NULL));
   
-
   Num=rand()%14+1;
-  if(Num==Check){
-    printf("\nvaccamadonna");
-  }else
-  printf("\n %d", Num);
+  while(Check==Num){
+    Num=rand()%14+1;
+  }
+  if(Check==Num){ 
+    printf("\nmi scappa la cacca"); //se questo si attiva son cazzi e vuol dire che cavallaro luca non sa fare il leader ciao a tutti
+  }
+ // printf("\n %d", Num); //controllo numeri generati ciao
   
   Check=Num;
+  return Num;
+}
+
+void menu(bool* start){
+
+int scelta = 0;
+
+printf("\n STAR WARS CANTINA SIMULATOR CIAO");
+
+printf("\n 1.CONTINUA");
+
+printf("\n 2.NUOVA PARTITA");
+
+printf("\n 3.ESCI(FALLO SALVATI)");
+while(scelta < 1 || scelta > 3){
+  scelta = getch() - '0';
+  break;
+}
+switch(scelta){
+
+case 1:
+      system("cls");
+      *start=0;
+      break;
+
+case 2:
+  system("cls");
+      printf("real");
+      break;
+case 3:
+  system("cls");
+      printf("ziopera");
+      break;
+
+}
+
 
 }
