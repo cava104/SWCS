@@ -5,7 +5,10 @@
 int main(){
     InitScreen();
 	border();
-	DrawSprite(sprite, 30, 10);
+	DrawSprite(sprite1, 30, 10);
 
 	PrintScreen();
+	for(int i=0; i<30; i++){
+		RandSprite();
+	}
 }

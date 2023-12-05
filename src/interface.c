@@ -47,6 +47,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include <windows.h>
+#include <time.h>
 #include "sprite.h"
 
 #define Height 25
@@ -117,4 +118,21 @@ void DrawSprite(char sprite[8][16], int xl, int yl){
 		xl -= 16;
 		j=-1;
   	}
+}
+int Check=0;
+char RandSprite(){
+
+  int Num=0;
+  if(Check == 0)
+    srand(time(NULL));
+  
+
+  Num=rand()%14+1;
+  if(Num==Check){
+    printf("\nvaccamadonna");
+  }else
+  printf("\n %d", Num);
+  
+  Check=Num;
+
 }
