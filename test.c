@@ -5,7 +5,7 @@
 int main(){
     InitScreen();
 	border();
-	DrawSprite(sprite, 30, 10);
+	DrawSprite(sprite);
 
 	PrintScreen();
 }
