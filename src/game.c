@@ -1,9 +1,6 @@
 #include "funzioni.h"
-<<<<<<< Updated upstream
-=======
 #include <time.h>
 #include <windows.h>
->>>>>>> Stashed changes
 
 void InitPlayer(struct Player* player){ //Funzione che mina i bit coin
     player->Credit = 1000;
@@ -15,27 +12,25 @@ void InitPlayer(struct Player* player){ //Funzione che mina i bit coin
         player->Inv[i] = 0;
     }
 }
-<<<<<<< Updated upstream
-=======
 
-struct Client* NewClient(){
-    struct Client* client = (struct Client*)malloc(sizeof(struct Client));
+struct Client NewClient(){
+    struct Client client;
 
     srand(time(NULL));
 
     int numOrders = rand() % 4+1;
 
-    client->order = (char**)malloc(sizeof(char*)*numOrders);
+    client.order = (char**)malloc(sizeof(char*)*numOrders);
     int i;
     for(i = 0; i < numOrders; i++){
         int item = rand() %  ArrayLenght(FoodNames) + 0;
-        client->order[i] = malloc(sizeof(char)*strlen(FoodNames[item])+1);
-        strcpy(client->order[i],FoodNames[item]);
+        client.order[i] = malloc(sizeof(char)*strlen(FoodNames[item])+1);
+        strcpy(client.order[i],FoodNames[item]);
     }
-    int randName = rand() % ArrayLenght(Names) + 0;
-    client->name = malloc(sizeof(char)*strlen(Names[randName])+1);
+    int randName = rand() % ArrayLenght(ClientNames) + 0;
+    client.name = malloc(sizeof(char)*strlen(ClientNames[randName])+1);
 
-    strcpy(client->name,Names[randName]);
+    strcpy(client.name,ClientNames[randName]);
 
     return client; 
 }
@@ -87,7 +82,7 @@ void Shop(struct Player* player){
             break;
             case 2:
                 //scrivere a video quanta roba vuoi coglione
-                char quantString[64];
+                char* quantString;
                 unsigned int quantInt = 0;
                 do{
                     scanf("%s", quantString);
@@ -115,4 +110,3 @@ void Shop(struct Player* player){
     }
 }
 
->>>>>>> Stashed changes

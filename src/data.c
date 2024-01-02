@@ -7,68 +7,68 @@
     
 #define DataPath "data/"
 
-char IntToChar(int val){
-   return char ch = '0' + val; 
+char* IntToChar(int val){
+    static char ch[2];
+    ch[0] = '0' + val;
+    ch[1] = '\0';
+    return ch;
 }
 
-int SaveData(int currentSlot,struct Bar* bar){
-    char* str  = malloc(2);
-    sprintf(str,"%d",currentSlot);
-    char* SavePath = (char*)malloc(strlen(DataPath)+strlen(str)+4);
-    strcpy(SavePath,DataPath);
-    strcat(SavePath,"Save-");
-    strcat(SavePath,IntToChar(currentSlot);
-    strcat(SavePath,".txt");
-    FILE* Save = fopen(SavePath,"wb");
-
+int SaveData(int Slot,struct Player* player){
+    char* fullpath = (char*)malloc(strlen(DataPath)+12);
+    strcpy(fullpath,DataPath);
+    strcat(fullpath,"Save-");
+    strcat(fullpath,IntToChar(Slot));
+    strcat(fullpath,".txt");
+    FILE* Save = fopen(fullpath,"wb");
+    printf("%s",fullpath);
     if(!Save){
         printf("Couldn't Save:\n");
-        free(SavePath);
+        free(fullpath);
         return -1;
     }
-    fwrite(bar,sizeof(struct Bar),1,Save);
+    fwrite(player,sizeof(struct Player),1,Save);
     fclose(Save);
-    free(SavePath);
+    free(fullpath);
     return 1;
 }
 
-int LoadData(int Slot,struct Bar* bar){
+int LoadData(int Slot,struct Player* player){
     char* str = malloc(2);
     sprintf(str,"%d",Slot);
-    char* LoadPath = (char*)malloc(strlen(DataPath)+strlen(str)+4);
-    strcpy(SavePath,DataPath);
-    strcat(SavePath,"Save-");
-    strcat(SavePath,IntToChar(currentSlot);
-    strcat(SavePath,".txt");
-    FILE* Load = fopen(LoadPath,"rb");
+    char* fullpath = (char*)malloc(strlen(DataPath)+12);
+    strcpy(fullpath,DataPath);
+    strcat(fullpath,"Save-");
+    strcat(fullpath,IntToChar(Slot));
+    strcat(fullpath,".txt");
+    FILE* Load = fopen(fullpath,"rb");
 
     if(!Load){
         perror("");
-        free(LoadPath);
+        free(fullpath);
         return -1;
     }
 
-    fread(bar, sizeof(struct Bar), 1, Load);
+    fread(player, sizeof(struct Player), 1, Load);
 
     fclose(Load);
-    free(LoadPath);
+    free(fullpath);
     return 1;
 }
 
-bool FileExist(int Slot){
-    char* str = malloc(2);
-    sprintf(str,"%d",Slot);
-    char* findFile = (char*)malloc(strlen(DataPath)+strlen(str)+4);
-    strcpy(SavePath,DataPath);
-    strcat(SavePath,"Save-");
-    strcat(SavePath,IntToChar(currentSlot);
-    strcat(SavePath,".txt");
+bool FileExist(int Slot){ //la usi nel menu per vedere i salvataggi
+    char* fullpath = (char*)malloc(strlen(DataPath)+12);
+    strcpy(fullpath,DataPath);
+    strcat(fullpath,"Save-");
+    strcat(fullpath,IntToChar(Slot));
+    strcat(fullpath,".txt");
 
-    FILE* file = fopen(findFile,"r");
+    FILE* file = fopen(fullpath,"r");
 
     if(file == NULL){
         return false;
     }
-    free(findFile);
+    free(fullpath);
+    fclose(file);
     return true;
 }
