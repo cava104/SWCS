@@ -21,7 +21,6 @@ int SaveData(int Slot,struct Player* player){
     strcat(fullpath,IntToChar(Slot));
     strcat(fullpath,".txt");
     FILE* Save = fopen(fullpath,"wb");
-    printf("%s",fullpath);
     if(!Save){
         printf("Couldn't Save:\n");
         free(fullpath);
