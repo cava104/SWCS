@@ -1,14 +1,7 @@
-#include "src/game.c"
+#include "src/data.c"
 
 int main(){
-    mWindow win = {
-        .height = 20,
-        .width = 100,
-        .Screen = InitScreen(&win)
-    };
+    int ciao = 243;
 
-    struct Client client = NewClient();
-    DrawSprite(&win,client.sprite,10,10);
-
-    Refresh(&win);
+    printf("%s",IntToChar(ciao));
 }

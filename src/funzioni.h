@@ -5,9 +5,9 @@
 
 //se vuoi puoi fare uno struct per il cibo che pensandoci un po e piu comodo
 //anche se li devi inizializzare a  mano
-const char FoodNames[][64] = {"Meiloorun","Bantha Tartare","Fruit Pie","Milla Flower Toast","Batuu Bits","Bantell Mits","Ogas Obsession","Outpost Mix",
+const char FoodNames[17][64] = {"Meiloorun","Bantha Tartare","Fruit Pie","Milla Flower Toast","Batuu Bits","Bantell Mits","Ogas Obsession","Outpost Mix",
 "Wookiee Cookie","Moss Chip","Flash Fried Zuchii","Crask Nut","Alcohol","Ardees","Jet Juice","Revnog","Moogan Tea"};
-const int FoodPrice[20] = {2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40};
+int FoodPrice[20] = {2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40};
 
 const char ClientNames[][64] = {"Carlos","Greg","GianmaWalker C.","Principessa Michelina","Darth Moli","Giovanni","Questo non e\' un bug",
 "Pringles","#freepalpatine","Odio la conio.h","SpaceStation 5","Kristian G."};
@@ -16,18 +16,22 @@ struct Player{
 	int Credit;
 	int* Inv;   // se fai lo struct cambia questa
 	int day;
+	int Lvl;
+	int Xp;
+	int XpNeeded;
 };
 
 struct Client{
-	char** order;
+	int* order;
 	int numOrders;
+	int* selected;
 	char* name;
-	char sprite[8][64];
+	int sprite;
 };
 
-int SaveData(int currentSlot,struct Player* player);
+int SaveData(struct Player* player);
 
-int LoadData(int Slot,struct Player* player);
+int LoadData(struct Player* player);
 
 struct Player* InitPlayer();
 

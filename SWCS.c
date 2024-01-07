@@ -6,10 +6,9 @@
 //orcamadonna
 int main(){
     srand(time(NULL));
-
     mWindow win = {
-        .height = 60,
-        .width = 200,
+        .height = 40,
+        .width = 100,
         .Screen = InitScreen(&win)
     };
     
@@ -18,7 +17,7 @@ int main(){
     
     struct Player* player = InitPlayer(player);
 
-    struct Client* client;
+    struct Client client;
     int menuSel = 1;
     do{
         PrintMenu(&win);
@@ -26,11 +25,11 @@ int main(){
         menuSel = Menu(&win);
         switch(menuSel){
             case 0:
-                //SaveData(1,player);
+                SaveData(player);
             break;
             case 1:
-                /*if(!LoadData(1,player))
-                    SaveData(1,player);*/
+                if(!LoadData(player))
+                    SaveData(player);
             break;
             case 2:
                 //stampa i crediti
@@ -41,14 +40,32 @@ int main(){
     bool gameover = false;
 
     ClearScreen(&win);
-    DrawRectangle(&win,0,0,win.width,win.height);
+
     while(!gameover){
         client = NewClient();
-        PrintGame(&win,client,player);
-        Refresh(&win);
 
-        FreeClient(client);
-        Sleep(500);
+        bool orderCompleted = false;
+
+        while(!orderCompleted){
+           
+            DrawRectangle(&win,0,0,win.width,win.height);
+            PrintGame(&win,&client,player);
+            Refresh(&win); 
+            char ch;
+            switch(ch = getch()){
+                case 'i':
+                    Inv(&win,player,&client);
+                break;
+                default:
+                break;
+            }
+
+            ClearScreen(&win);
+        }
+
+        ClearScreen(&win);
+        Refresh(&win);
+        Sleep(1000);
     }
     ClearScreen(&win);
     Refresh(&win);

@@ -49,28 +49,12 @@
 #include <conio.h>
 #include <stdio.h>
 #include <windows.h>
+#include <stdbool.h>
 
 
 //gotoxy ma fatta con gli escape code ascii cosi andava anche su linux
 void MoveCursor(int x,int y){
     printf("\e[%d;%dH",y,x);
-}
-
-//mette il cursore in alto a sinistra e scrive sopra alla roba gia esistente senza dover cancellare tutto
-void Erase(mWindow* win){    
-    MoveCursor(0,0);
-    char* row = (char*)malloc(sizeof(char) * win->width+1);
-
-    int i,j;
-    for(i = 0; i < win->height; i++){
-        for(j = 0; j < win->width; j++){
-            row[j] = ' ';
-        }
-        
-        row[j] = '\0';
-        puts(row);
-    }
-    free(row);
 }
 
 void ClearScreen(mWindow* win){
@@ -85,7 +69,7 @@ void ClearScreen(mWindow* win){
 //stessa roba di Erase() ma disegna la roba nella "window"
 void Refresh(mWindow* win){
     MoveCursor(0,0);
-    char* row = (char*)malloc(sizeof(char)*win->height+1);
+    char row[200];
 
     int i,j;
     for(i = 0; i < win->height; i++){
@@ -95,7 +79,6 @@ void Refresh(mWindow* win){
         row[j] = '\0';
         puts(row);
     }
-    
 }
 
 //inizializza lo schermo alla grandezza che vuoi te
@@ -104,7 +87,7 @@ char** InitScreen(mWindow* self){
     int i,j;
     char** screen = (char**)malloc(sizeof(char*)*self->height);
     for(i = 0; i < self->height; i++){
-        screen[i] = (char*)malloc(sizeof(char)*self->width+1);
+        screen[i] = (char*)malloc(sizeof(char)*self->width);
         for(j = 0; j < self->width; j++){
             screen[i][j] = ' ';  
         }
@@ -128,23 +111,23 @@ void DrawRectangle(mWindow* win, int x, int y, int width, int height) {
 }
 
 //se vuoi togli scrollingText se non vuoi che il testo si aggiorna lettera per lettera
-void printW(mWindow* win,const char* Text,int x, int y,int MaxWidth){  
-  if(x > win->width || x < 0 || y > win->height || y < 0){   
-    return;
-  }
-
+void printW(mWindow* win,const char* Text,int x, int y,int MaxWidth,bool ScrollText){  
   int startofLine = x; //nuova variabile per ritornare all'inizio della riga quando si va a capo
 
-  while(*Text != '\0' ){
-    if(*Text == '\n' || x > MaxWidth){ // quando la x e maggiore o uguale di MaxWidth
+  while(*Text != '\0' || y > win->height-1){
+    if(*Text == '\n' || x > MaxWidth || x > win->width-1){ // quando la x e maggiore o uguale di MaxWidth
       y++;                              // o nel text ce uno \n va a capo.
       x = startofLine;
     }
     win->Screen[y][x] = *Text;
     x++; 
     Text++;
+
+    if(ScrollText){
+      Refresh(win);
+      Sleep(50);
+    }
   }
-  
 }
 
 //così canossa non rompe a noi non serve
@@ -176,29 +159,30 @@ void DrawSprite(mWindow* win,char Face[][64] ,int SpritePosX,int SpritePosY){ //
 //nvm esplode (nvidia esplode) si processore amd e scheda grafica nvidia possono funzionare insieme e vice versa?
 
 void PrintMenu(mWindow* win){
-  printW(win,"Star Wars: Cantina Simulator V0.01",2,2,win->width-1);
-  printW(win,"   Nuova Partita",2,4,win->width-1);
-  printW(win,"   Carica Partita",2,5,win->width-1);
-  printW(win,"   Crediti",2,6,win->width-1);
+  printW(win,"Star Wars: Cantina Simulator V0.01",2,2,win->width-1,true);
+  printW(win,"   Nuova Partita",2,4,win->width-1,true);
+  printW(win,"   Carica Partita",2,5,win->width-1,true);
+  printW(win,"   Crediti",2,6,win->width-1,true);
 }
 
 void PrintGame(mWindow* win,struct Client* client,struct Player* player){
-    printW(win,client->name,10,8,win->width-1);
-    DrawSprite(win,client->sprite,10,10);
-    DrawRectangle(win,2,38,197,30);
+    printW(win,client->name,2,win->height-12,win->width-1,false);
+    DrawSprite(win,sprite[client->sprite],10,10);
+    DrawRectangle(win,2,win->height-11,win->width-4,9);
     int i;
     for(i = 0; i < client->numOrders; i++){
       if(i > 0)
-        printW(win,client->order[i],4,win->height-10 + i,win->width-6);
+        printW(win,FoodNames[client->order[i]],4,win->height-10 + i,win->width-6,true);
     }
 }
 
-void PrintShop(mWindow* win){ 
+//se non va forse è colpa di questo
+void PrintInv(mWindow* win,struct Player* player){ 
   int i;
-  for (i = 0;i<10;i++){
-    printW(win,FoodNames[i],2,i+2,win->width-1);
+  char buf[8];
+  for (i = 0;i<ArrayLenght(FoodNames);i++){
+    printW(win,FoodNames[i],win->width/2,i+2,win->width-1,false);
+    printW(win,itoa(player->Inv[i],buf,10),(win->width/2) + 20,i+2,win->width-1,false);
   }
-  for (i = 10;i<20;i++){
-    printW(win,FoodNames[i],20,i+2,win->width-1);
-  }
+  Refresh(win);
 }

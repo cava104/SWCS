@@ -7,18 +7,10 @@
     
 #define DataPath "data/"
 
-char* IntToChar(int val){
-    static char ch[2];
-    ch[0] = '0' + val;
-    ch[1] = '\0';
-    return ch;
-}
-
-int SaveData(int Slot,struct Player* player){
+int SaveData(struct Player* player){
     char* fullpath = (char*)malloc(strlen(DataPath)+12);
     strcpy(fullpath,DataPath);
-    strcat(fullpath,"Save-");
-    strcat(fullpath,IntToChar(Slot));
+    strcat(fullpath,"Save");
     strcat(fullpath,".txt");
     FILE* Save = fopen(fullpath,"wb");
     if(!Save){
@@ -32,13 +24,10 @@ int SaveData(int Slot,struct Player* player){
     return 1;
 }
 
-int LoadData(int Slot,struct Player* player){
-    char* str = malloc(2);
-    sprintf(str,"%d",Slot);
+int LoadData(struct Player* player){
     char* fullpath = (char*)malloc(strlen(DataPath)+12);
     strcpy(fullpath,DataPath);
-    strcat(fullpath,"Save-");
-    strcat(fullpath,IntToChar(Slot));
+    strcat(fullpath,"Save");
     strcat(fullpath,".txt");
     FILE* Load = fopen(fullpath,"rb");
 
@@ -55,11 +44,10 @@ int LoadData(int Slot,struct Player* player){
     return 1;
 }
 
-bool FileExist(int Slot){ //la usi nel menu per vedere i salvataggi
+bool FileExist(){ //la usi nel menu per vedere i salvataggi
     char* fullpath = (char*)malloc(strlen(DataPath)+12);
     strcpy(fullpath,DataPath);
-    strcat(fullpath,"Save-");
-    strcat(fullpath,IntToChar(Slot));
+    strcat(fullpath,"Save");
     strcat(fullpath,".txt");
 
     FILE* file = fopen(fullpath,"r");

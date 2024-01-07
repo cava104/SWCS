@@ -14,52 +14,42 @@ struct Player* InitPlayer(){ //Funzione che mina i bit coin
     for(i = 0; i < ArrayLenght(FoodNames); i++){
         player->Inv[i] = 0;
     }
+
+    player->Lvl = 1;
+    player->Xp = 0;
+    player->XpNeeded = 20;
+
     return player;
 }
 
-struct Client* NewClient(){
-    struct Client* client = (struct Client*)malloc(sizeof(struct Client));
+struct Client NewClient(){
+    struct Client client;
 
-    client->numOrders = rand() % 4+1;
-
-    client->order = (char**)malloc(sizeof(char*)*client->numOrders);
+    client.numOrders = rand() % 4+1;
     int i,j;
-    for(i = 0; i < client->numOrders; i++){
+
+    client.order = malloc(sizeof(char)*client.numOrders);
+    
+    for(i = 0; i < client.numOrders; i++){
         int item = rand() %  ArrayLenght(FoodNames) + 0;
-        client->order[i] = malloc(sizeof(char)*strlen(FoodNames[item])+1);
-        strcpy(client->order[i],FoodNames[item]);
+        client.order[i] = item;
     }
+    
+    client.selected = malloc(sizeof(int)*4);
+
+    for(i = 0; i < 4; i++){
+        client.selected[i] = -1;
+    }
+
     int randName = rand() % ArrayLenght(ClientNames) + 0;
-    client->name = malloc(sizeof(char)*strlen(ClientNames[randName])+1);
+    client.name = malloc(sizeof(char)*strlen(ClientNames[randName])+1);
 
-    int randsprite = rand() % 4;
+    strcpy(client.name,ClientNames[randName]);
+    client.name[strlen(client.name)+1] = '\0';
 
-    for(i = 0; i < SpriteSizeY; i++){
-        for(j = 0; j < SpriteSizeX; j++){
-            client->sprite[i][j] = sprite[randsprite][i][j];
-        }
-    }
-
-    strcpy(client->name,ClientNames[randName]);
-
+    client.sprite = rand() % 4;
     return client; 
 }
-
-void FreeClient(struct Client* client){
-    int i;
-    for(i = 0; i < client->numOrders;i++){
-        free(client->order[i]);
-    }
-    free(client);
-}
-
-/*void printClient(struct Client* client){
-    printf("%s\n",client->name);
-    int i;
-    for(i = 0; i < 4; i++){
-        printf("%s\n",client->order[i]);
-    }
-}*/
 
 int Input(int* sel, int sceltaMax){
     if(kbhit()){
@@ -105,9 +95,9 @@ int Menu(mWindow* win){
                     int i;
                     for(i = 0; i < 3; i++){
                         if(i == sel)
-                            printW(win," >",2,i+4,win->width-1);
+                            printW(win," >",2,i+4,win->width-1,false);
                         else 
-                            printW(win,"  ",2,i+4,win->width-1);
+                            printW(win,"  ",2,i+4,win->width-1,false);
                     }
                     Refresh(win);
                 break;
@@ -123,56 +113,95 @@ int Menu(mWindow* win){
 }
 //non e cambiatouncazo
                             //mi dimetto (finally)
-void Shop(mWindow* win,struct Player* player){
+void Inv(mWindow* win,struct Player* player,struct Client* client){
     int quit = 0;
     int sel = 0;
- //5)evasione fiscale a verona porta nuova
+    //5)evasione fiscale a verona porta nuova
     while(!quit){
-        int sel2 = Input(&sel,ArrayLenght(FoodNames));
-        
-        switch(sel2){
-            case 1:
+        if (kbhit()){
+            int sel2 = Input(&sel,ArrayLenght(FoodNames));
+            PrintInv(win,player);
+            switch(sel2){
+                case 1:
                     int i;
-                    for(i = 0; i < 10; i++){
+                    for(i = 0; i < ArrayLenght(FoodNames); i++){
                         if(i == sel)
-                            printW(win," >",2,i+2,win->width-1);
+                            printW(win," >",win->width/2 - 2,i+2,win->width-1,false);
                         else 
-                            printW(win,"  ",2,i+2,win->width-1);
-                    }
-                    for(i = 10; i < 20; i++){
-                        if(i == sel)
-                            printW(win," >",20,i+2,win->width-1);
-                        else 
-                            printW(win,"  ",20,i+2,win->width-1);
+                            printW(win,"  ",win->width/2 - 2,i+2,win->width-1,false);
                     }
                     Refresh(win);
-            break;
-            case 2:
-                //scrivere a video quanta roba vuoi coglione
-                char* quantString;
-                unsigned int quantInt = 0;
-                do{
-                    scanf("%s", quantString);
-                    while(*quantString != '\0'){
-                        if(*quantString >= '0' && *quantString <= '9'){
-                            quantInt *= 10;
-                            quantInt = *quantString - '0';
-                        }
-                        quantString++;
-                    }
-                }while(quantInt < 1 || quantInt > 100);
+                break;
+                case 2:
+                    ClearScreen(win);
+                    DrawRectangle(win,0,0,win->width,win->height);
+                    printW(win,FoodNames[sel],2,3,win->width-1,false);
 
-                if(FoodPrice[sel] * quantInt <= player->Credit){
-                    player->Credit -= FoodPrice[sel] * quantInt;
-                    player->Inv[sel] += quantInt;
-                } else{
-                    printf("\nNon puoi permetterti %d %s\n",quantInt,FoodNames[sel]);
-                    Sleep(1);
-                }
-                quit = 1;
-            break;
-            default:
-            break;
+                    printW(win,"Acquistare: a | Seleziona/Deseleziona: s | Esci: e",2,4,win->width-1,false);
+                    Refresh(win);
+                    
+                    while (1){
+                        if (kbhit()){
+                            char ch = getch();
+                            switch(ch){
+                                case 'a':
+                                    int quantInt = 0;
+                                    do{
+                                        printW(win,"Quanti ne vuoi acquistare? (puoi averne massimo 100)",2,8,win->width-1,false);
+                                        Refresh(win);
+                                        scanf("%d", &quantInt);
+                                    }while(quantInt < 1 || quantInt > 100);
+                                    
+                                    if(player->Inv[sel] + quantInt > 100){
+                                        quantInt = 100 - player->Inv[sel]; 
+                                    }
+
+                                    if(FoodPrice[sel] * quantInt <= player->Credit){
+                                        player->Credit -= FoodPrice[sel] * quantInt;
+                                        player->Inv[sel] += quantInt;
+                                    } else{
+                                        ClearScreen(win);
+                                        printW(win,"Povero",2,6,win->width-1,true);
+                                        Refresh(win);
+                                        Sleep(1000);
+                                    }
+                                    Refresh(win);
+                                    return;  
+                                break;
+                                case 's':
+                                    if (player->Inv[sel] <= 0){
+                                        printW(win,"Non hai nessun piatto di questo tipo",2,6,win->width-1,false);
+                                        Refresh(win);
+                                        Sleep(1000);
+                                    }
+                                    else {
+                                        int i;
+                                        for (i = 0; i < 4; i++){
+                                            //client->selected[i] = (sel == client->selected[i]) ? -1 : sel;
+                                            if(client->selected[i] == -1){
+                                                client->selected[i] = sel;
+                                                break;
+                                            }
+                                            else if(sel == client->selected[i]){
+                                                client->selected[i] = -1;
+                                                break;
+                                            }
+                                        }
+                                        return;             
+                                    }
+                                break;
+                                case 'e':
+                                    return;
+                                break;
+                                default:
+                                break;
+                            }
+                        }
+                    }
+                break;
+                default:
+                break;
+            } 
         }
     }
 }
@@ -183,6 +212,6 @@ void TimeManager(struct Player* player){
     if (time == 24){
         time = 4;
         player->day++;
-        //SaveData();
+        SaveData(player);
     }
 }
