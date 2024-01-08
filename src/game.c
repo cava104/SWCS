@@ -1,4 +1,5 @@
 #include "interface.c"
+#include <conio.h>
 #include <time.h>
 #include <windows.h>
 #include <stdlib.h>
@@ -17,7 +18,7 @@ struct Player* InitPlayer(){ //Funzione che mina i bit coin
 
     player->Lvl = 1;
     player->Xp = 0;
-    player->XpNeeded = 20;
+    player->XpNeeded = 40;
 
     return player;
 }
@@ -121,14 +122,15 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
         if (kbhit()){
             int sel2 = Input(&sel,ArrayLenght(FoodNames));
             PrintInv(win,player);
+            Refresh(win);
             switch(sel2){
                 case 1:
                     int i;
                     for(i = 0; i < ArrayLenght(FoodNames); i++){
                         if(i == sel)
-                            printW(win," >",win->width/2 - 2,i+2,win->width-1,false);
+                            printW(win," >",win->width/2 - 3,i+3,win->width-1,false);
                         else 
-                            printW(win,"  ",win->width/2 - 2,i+2,win->width-1,false);
+                            printW(win,"  ",win->width/2 - 3,i+3,win->width-1,false);
                     }
                     Refresh(win);
                 break;
@@ -150,7 +152,7 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
                                         printW(win,"Quanti ne vuoi acquistare? (puoi averne massimo 100)",2,8,win->width-1,false);
                                         Refresh(win);
                                         scanf("%d", &quantInt);
-                                    }while(quantInt < 1 || quantInt > 100);
+                                    }while(quantInt < 0 || quantInt > 100);
                                     
                                     if(player->Inv[sel] + quantInt > 100){
                                         quantInt = 100 - player->Inv[sel]; 
@@ -159,11 +161,11 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
                                     if(FoodPrice[sel] * quantInt <= player->Credit){
                                         player->Credit -= FoodPrice[sel] * quantInt;
                                         player->Inv[sel] += quantInt;
-                                    } else{
+                                    }
+                                    else{
                                         ClearScreen(win);
                                         printW(win,"Povero",2,6,win->width-1,true);
                                         Refresh(win);
-                                        Sleep(1000);
                                     }
                                     Refresh(win);
                                     return;  
@@ -172,7 +174,6 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
                                     if (player->Inv[sel] <= 0){
                                         printW(win,"Non hai nessun piatto di questo tipo",2,6,win->width-1,false);
                                         Refresh(win);
-                                        Sleep(1000);
                                     }
                                     else {
                                         int i;
@@ -204,6 +205,60 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
             } 
         }
     }
+}
+
+void Consegna(mWindow* win,struct Player* player,struct Client* client){
+    int i, j;
+    float multiplier = 1; //markiplier
+    int satisfaction = 0;
+    for (i=0;i<client->numOrders;i++){
+        for (j=0;j<4;j++){
+            if (client->order[i] == client->selected[j]){
+                multiplier += 0.2;
+                satisfaction++;
+            }
+        }
+        j = 0;
+    }
+    i = 0;
+
+    for (i=0;i<client->numOrders;i++){
+        for (j=0;j<4;j++){
+            if (client->order[i] == client->selected[j])
+                player->Credit += FoodPrice[client->order[i]] * multiplier;
+        }
+        j = 0;
+    }
+    i = 0;
+    switch(satisfaction){
+        case 0:
+            printW(win,"Questo non e\' quello che ho ordinato.",4,win->height-7,win->width-1,true);
+            break;
+        case 1:
+            if (client->numOrders > 1)
+                printW(win,"Hai sbagliato alcune cose.",4,win->height-7,win->width-1,true);
+            else
+                printW(win,"Grazie mille",4,win->height-7,win->width-1,true);
+            player->Xp += 10;
+            break;
+        case 2:
+            if (client->numOrders > 2)
+                printW(win,"Hai sbagliato alcune cose.",4,win->height-7,win->width-1,true);
+            else
+                printW(win,"Grazie mille",4,win->height-7,win->width-1,true);
+            player->Xp += 20;
+            break;
+        case 3:
+            printW(win,"Grazie mille",4,win->height-7,win->width-1,true);
+            player->Xp += 30;
+            break;
+    }
+    if (player->Xp >= player->XpNeeded){
+        player->Xp -= player->XpNeeded;
+        player->XpNeeded += 20;
+        player->Lvl++;
+    }
+    Sleep(1000);
 }
 
 void TimeManager(struct Player* player){

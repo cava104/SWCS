@@ -56,10 +56,12 @@ int main(){
                 case 'i':
                     Inv(&win,player,&client);
                 break;
+                case 'c':
+                    Consegna(&win,player,&client);
+                break;
                 default:
                 break;
             }
-
             ClearScreen(&win);
         }
 

@@ -54,7 +54,7 @@
 
 //gotoxy ma fatta con gli escape code ascii cosi andava anche su linux
 void MoveCursor(int x,int y){
-    printf("\e[%d;%dH",y,x);
+  printf("\e[%d;%dH",y,x);
 }
 
 void ClearScreen(mWindow* win){
@@ -125,9 +125,31 @@ void printW(mWindow* win,const char* Text,int x, int y,int MaxWidth,bool ScrollT
 
     if(ScrollText){
       Refresh(win);
-      Sleep(50);
+      Sleep(20);
     }
   }
+}
+
+void printInt(mWindow* win,int Text,int MaxX, int y){  
+  int x = MaxX; //nuova variabile per ritornare all'inizio della riga quando si va a capo
+  char arr[10] = {'0','1','2','3','4','5','6','7','8','9'};
+  int val = 0;
+  do{
+    if (Text >= 100){
+      val = Text%10;
+      Text /= 10;
+    }
+    else if (Text >= 10){
+      val = Text%10;
+      Text /= 10;
+    }
+    else{
+      val = Text;
+      Text /= 10;
+    }
+    win->Screen[y][x] = arr[val];
+    x--;
+  }while(Text != 0);
 }
 
 //così canossa non rompe a noi non serve
@@ -166,23 +188,34 @@ void PrintMenu(mWindow* win){
 }
 
 void PrintGame(mWindow* win,struct Client* client,struct Player* player){
-    printW(win,client->name,2,win->height-12,win->width-1,false);
+    printW(win,client->name,2,win->height-13,win->width-1,false);
+    printW(win,"$",win->width-3,win->height-13,win->width-1,false);
+    printW(win,"Inventario: i",4,win->height-6,win->width-1,false);
+    printW(win,"Consegna: c",4,win->height-5,win->width-1,false);
+    printInt(win,player->Credit,win->width-5,win->height-13);
+    printInt(win,player->Xp,win->width-5,win->height-15);
+    printInt(win,player->Lvl,win->width-5,win->height-16);
+    printInt(win,player->XpNeeded,win->width-5,win->height-14);
     DrawSprite(win,sprite[client->sprite],10,10);
-    DrawRectangle(win,2,win->height-11,win->width-4,9);
+    DrawRectangle(win,2,win->height-12,win->width-3,9);
     int i;
     for(i = 0; i < client->numOrders; i++){
-      if(i > 0)
-        printW(win,FoodNames[client->order[i]],4,win->height-10 + i,win->width-6,true);
+      printW(win,FoodNames[client->order[i]],4,win->height-10 + i,win->width-6,true);
+    }
+    for(i = 0; i < 4; i++){
+      if (client->selected[i] != -1)
+        printW(win,FoodNames[client->selected[i]],30,win->height-10 + i,win->width-6,true);
     }
 }
 
 //se non va forse è colpa di questo
 void PrintInv(mWindow* win,struct Player* player){ 
   int i;
-  char buf[8];
+  printW(win,"Inventario",win->width/2,2,win->width-1,false);
+
   for (i = 0;i<ArrayLenght(FoodNames);i++){
-    printW(win,FoodNames[i],win->width/2,i+2,win->width-1,false);
-    printW(win,itoa(player->Inv[i],buf,10),(win->width/2) + 20,i+2,win->width-1,false);
+    printW(win,FoodNames[i],win->width/2,i+3,win->width-1,false);
+    printInt(win,player->Inv[i],win->width/2 + 23, i + 3);
   }
   Refresh(win);
 }
