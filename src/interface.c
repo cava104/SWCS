@@ -131,7 +131,7 @@ void printW(mWindow* win,const char* Text,int x, int y,int MaxWidth,bool ScrollT
 }
 
 void printInt(mWindow* win,int Text,int MaxX, int y){  
-  int x = MaxX; //nuova variabile per ritornare all'inizio della riga quando si va a capo
+  int x = MaxX;
   char arr[10] = {'0','1','2','3','4','5','6','7','8','9'};
   int val = 0;
   do{
@@ -190,14 +190,11 @@ void PrintMenu(mWindow* win){
 void PrintGame(mWindow* win,struct Client* client,struct Player* player){
     printW(win,client->name,2,win->height-13,win->width-1,false);
     printW(win,"$",win->width-3,win->height-13,win->width-1,false);
-    printW(win,"Inventario: i",4,win->height-6,win->width-1,false);
-    printW(win,"Consegna: c",4,win->height-5,win->width-1,false);
+    printW(win,"Inventario: i",4,win->height-5,win->width-1,false);
+    printW(win,"Consegna: c",18,win->height-5,win->width-1,false);
     printInt(win,player->Credit,win->width-5,win->height-13);
-    printInt(win,player->Xp,win->width-5,win->height-15);
-    printInt(win,player->Lvl,win->width-5,win->height-16);
-    printInt(win,player->XpNeeded,win->width-5,win->height-14);
     DrawSprite(win,sprite[client->sprite],10,10);
-    DrawRectangle(win,2,win->height-12,win->width-3,9);
+    DrawRectangle(win,2,win->height-12,win->width-4,10);
     int i;
     for(i = 0; i < client->numOrders; i++){
       printW(win,FoodNames[client->order[i]],4,win->height-10 + i,win->width-6,true);
@@ -218,4 +215,26 @@ void PrintInv(mWindow* win,struct Player* player){
     printInt(win,player->Inv[i],win->width/2 + 23, i + 3);
   }
   Refresh(win);
+}
+
+void PrintLvl(mWindow* win,struct Player* player){
+  printW(win,"Livello ",40,win->height-13,win->width-1,false); 
+  int val = 80%100;
+  printInt(win,val,55,win->height-13);
+  /*
+  if (val*100 > 80){
+    printW(win,"[####-]",48,win->height-13,win->width-1,false); 
+  }
+  else if (val*100 > 60){
+    printW(win,"[###--]",48,win->height-13,win->width-1,false); 
+  }
+  else if (val*100 > 40){
+    printW(win,"[##---]",48,win->height-13,win->width-1,false); 
+  }
+  else if (val*100 > 20){
+    printW(win,"[#----]",48,win->height-13,win->width-1,false); 
+  }
+  else
+    printW(win,"[-----]",48,win->height-13,win->width-1,false); */
+  printInt(win,player->Lvl,58,win->height-13);
 }

@@ -50,6 +50,7 @@ int main(){
            
             DrawRectangle(&win,0,0,win.width,win.height);
             PrintGame(&win,&client,player);
+            PrintLvl(&win,player);
             Refresh(&win); 
             char ch;
             switch(ch = getch()){

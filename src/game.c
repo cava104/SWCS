@@ -7,7 +7,7 @@
 
 struct Player* InitPlayer(){ //Funzione che mina i bit coin
     struct Player* player = (struct Player*)malloc(sizeof(struct Player));
-    player->Credit = 1000;
+    player->Credit = 100;
     player->day = 0;
     player->Inv = malloc(sizeof(int)*ArrayLenght(FoodNames));
 
@@ -120,7 +120,7 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
     //5)evasione fiscale a verona porta nuova
     while(!quit){
         if (kbhit()){
-            int sel2 = Input(&sel,ArrayLenght(FoodNames));
+            int sel2 = Input(&sel,ArrayLenght(FoodNames)-1);
             PrintInv(win,player);
             Refresh(win);
             switch(sel2){
