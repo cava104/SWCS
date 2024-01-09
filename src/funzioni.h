@@ -5,8 +5,8 @@
 
 //se vuoi puoi fare uno struct per il cibo che pensandoci un po e piu comodo
 //anche se li devi inizializzare a  mano
-const char FoodNames[][64] = {"Meiloorun","Bantha Tartare","Fruit Pie","Milla Flower Toast","Batuu Bits","Bantell Mits","Ogas Obsession","Outpost Mix",
-"Wookiee Cookie","Moss Chip","Flash Fried Zuchii","Crask Nut","Alcohol","Ardees","Jet Juice","Revnog","Moogan Tea"};
+const char FoodNames[][64] = {"Meiloorun","Tartare di Bantha","Torta di Frutta","Toast al Fiore di Milla","Batuu Bits","Bantell Mits","Ossessione di Ogas","Mix dell\'Avamposto",
+"Biscotti Wookiee","Patatine Moss","Carne Fritta di Zuchii","Noci di Crask","Alcool","Ardees","Succo Jet","Revnog","Te al Moogan"};
 int FoodPrice[20] = {2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40};
 
 const char ClientNames[][64] = {"Carlos","Greg","GianmaWalker C.","Principessa Michelina","Darth Moli","Giovanni","Questo non e\' un bug",

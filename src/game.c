@@ -23,17 +23,28 @@ struct Player* InitPlayer(){ //Funzione che mina i bit coin
     return player;
 }
 
-struct Client NewClient(){
+struct Client NewClient(struct Player* player){
     struct Client client;
 
-    client.numOrders = rand() % 4+1;
+    if (player->Lvl <= 4){
+        client.numOrders = rand() % player->Lvl+1;
+    }
+    else
+        client.numOrders = rand() % 4+1;
+    
     int i,j;
 
     client.order = malloc(sizeof(char)*client.numOrders);
     
     for(i = 0; i < client.numOrders; i++){
-        int item = rand() %  ArrayLenght(FoodNames) + 0;
+        int item = rand() %  player->Lvl + 0;
         client.order[i] = item;
+        int j;
+        for (j = i-1; j >= 0; j--){
+            if (item == client.order[j]){
+                //Fai che non ti rida 2 volte lo stesso ordine
+            }
+        }
     }
     
     client.selected = malloc(sizeof(int)*4);
@@ -48,7 +59,7 @@ struct Client NewClient(){
     strcpy(client.name,ClientNames[randName]);
     client.name[strlen(client.name)+1] = '\0';
 
-    client.sprite = rand() % 4;
+    client.sprite = rand() % 5;
     return client; 
 }
 
@@ -69,6 +80,12 @@ int Input(int* sel, int sceltaMax){
             case 'e':
                 return 2;
             break;
+            case 'f':
+                return 3;
+                break;
+            case 'b':
+                return 4;
+                break;
             default:
                 return 0;
             break;
@@ -117,10 +134,12 @@ int Menu(mWindow* win){
 void Inv(mWindow* win,struct Player* player,struct Client* client){
     int quit = 0;
     int sel = 0;
+    PrintInv(win,player);
+    Refresh(win);
     //5)evasione fiscale a verona porta nuova
     while(!quit){
         if (kbhit()){
-            int sel2 = Input(&sel,ArrayLenght(FoodNames)-1);
+            int sel2 = Input(&sel,(player->Lvl)-1);
             PrintInv(win,player);
             Refresh(win);
             switch(sel2){
@@ -139,7 +158,7 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
                     DrawRectangle(win,0,0,win->width,win->height);
                     printW(win,FoodNames[sel],2,3,win->width-1,false);
 
-                    printW(win,"Acquistare: a | Seleziona/Deseleziona: s | Esci: e",2,4,win->width-1,false);
+                    printW(win,"Acquistare: a | Indietro: b",2,4,win->width-1,false);
                     Refresh(win);
                     
                     while (1){
@@ -149,7 +168,7 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
                                 case 'a':
                                     int quantInt = 0;
                                     do{
-                                        printW(win,"Quanti ne vuoi acquistare? (puoi averne massimo 100)",2,8,win->width-1,false);
+                                        printW(win,"Quanti ne vuoi acquistare? [MAX 100]",2,6,win->width-1,true);
                                         Refresh(win);
                                         scanf("%d", &quantInt);
                                     }while(quantInt < 0 || quantInt > 100);
@@ -170,28 +189,7 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
                                     Refresh(win);
                                     return;  
                                 break;
-                                case 's':
-                                    if (player->Inv[sel] <= 0){
-                                        printW(win,"Non hai nessun piatto di questo tipo",2,6,win->width-1,false);
-                                        Refresh(win);
-                                    }
-                                    else {
-                                        int i;
-                                        for (i = 0; i < 4; i++){
-                                            //client->selected[i] = (sel == client->selected[i]) ? -1 : sel;
-                                            if(client->selected[i] == -1){
-                                                client->selected[i] = sel;
-                                                break;
-                                            }
-                                            else if(sel == client->selected[i]){
-                                                client->selected[i] = -1;
-                                                break;
-                                            }
-                                        }
-                                        return;             
-                                    }
-                                break;
-                                case 'e':
+                                case 'b':
                                     return;
                                 break;
                                 default:
@@ -200,6 +198,30 @@ void Inv(mWindow* win,struct Player* player,struct Client* client){
                         }
                     }
                 break;
+                case 3:
+                    if (player->Inv[sel] <= 0){
+                        printW(win,"Non hai nessun piatto di questo tipo",2,6,win->width-1,false);
+                        Refresh(win);
+                    }
+                    else {
+                        int i;
+                        for (i = 0; i < 4; i++){
+                            //client->selected[i] = (sel == client->selected[i]) ? -1 : sel;
+                            if(client->selected[i] == -1){
+                                client->selected[i] = sel;
+                                break;
+                            }
+                            else if(sel == client->selected[i]){
+                                client->selected[i] = -1;
+                                break;
+                            }
+                        }
+                        return;
+                    }
+                    break;
+                case 4:
+                    return;
+                    break;
                 default:
                 break;
             } 
@@ -224,12 +246,15 @@ void Consegna(mWindow* win,struct Player* player,struct Client* client){
 
     for (i=0;i<client->numOrders;i++){
         for (j=0;j<4;j++){
-            if (client->order[i] == client->selected[j])
+            if (client->order[i] == client->selected[j]){
                 player->Credit += FoodPrice[client->order[i]] * multiplier;
+                player->Inv[client->selected[j]]--;
+            }
         }
         j = 0;
     }
     i = 0;
+
     switch(satisfaction){
         case 0:
             printW(win,"Questo non e\' quello che ho ordinato.",4,win->height-7,win->width-1,true);
@@ -253,12 +278,13 @@ void Consegna(mWindow* win,struct Player* player,struct Client* client){
             player->Xp += 30;
             break;
     }
-    if (player->Xp >= player->XpNeeded){
+    if (player->Xp >= player->XpNeeded && player->Lvl != 20){
         player->Xp -= player->XpNeeded;
         player->XpNeeded += 20;
         player->Lvl++;
     }
     Sleep(1000);
+    *client = NewClient(player);
 }
 
 void TimeManager(struct Player* player){

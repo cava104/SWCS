@@ -42,15 +42,15 @@ int main(){
     ClearScreen(&win);
 
     while(!gameover){
-        client = NewClient();
+        client = NewClient(player);
 
         bool orderCompleted = false;
 
         while(!orderCompleted){
            
             DrawRectangle(&win,0,0,win.width,win.height);
-            PrintGame(&win,&client,player);
             PrintLvl(&win,player);
+            PrintGame(&win,&client,player);
             Refresh(&win); 
             char ch;
             switch(ch = getch()){
