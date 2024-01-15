@@ -8,7 +8,7 @@
 #define DataPath "data/"
 
 int SaveData(struct Player* player){
-    char* fullpath = (char*)malloc(strlen(DataPath)+12);
+    char* fullpath = (char*)malloc(strlen(DataPath)+9);
     strcpy(fullpath,DataPath);
     strcat(fullpath,"Save");
     strcat(fullpath,".txt");
@@ -25,7 +25,7 @@ int SaveData(struct Player* player){
 }
 
 int LoadData(struct Player* player){
-    char* fullpath = (char*)malloc(strlen(DataPath)+12);
+    char* fullpath = (char*)malloc(strlen(DataPath)+9);
     strcpy(fullpath,DataPath);
     strcat(fullpath,"Save");
     strcat(fullpath,".txt");
@@ -36,7 +36,11 @@ int LoadData(struct Player* player){
         free(fullpath);
         return -1;
     }
-
+    
+    if(player){
+        free(player);
+    }
+    
     fread(player, sizeof(struct Player), 1, Load);
 
     fclose(Load);
@@ -45,7 +49,7 @@ int LoadData(struct Player* player){
 }
 
 bool FileExist(){ //la usi nel menu per vedere i salvataggi
-    char* fullpath = (char*)malloc(strlen(DataPath)+12);
+    char* fullpath = (char*)malloc(strlen(DataPath)+9);
     strcpy(fullpath,DataPath);
     strcat(fullpath,"Save");
     strcat(fullpath,".txt");

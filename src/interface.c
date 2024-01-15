@@ -181,44 +181,48 @@ void DrawSprite(mWindow* win,char Face[][64] ,int SpritePosX,int SpritePosY){ //
 //nvm esplode (nvidia esplode) si processore amd e scheda grafica nvidia possono funzionare insieme e vice versa?
 
 void PrintMenu(mWindow* win){
-  printW(win,"Star Wars: Cantina Simulator V0.01",2,2,win->width-1,true);
+  printW(win,"Star Wars: Cantina Simulator V1.0",2,2,win->width-1,true);
   printW(win,"   Nuova Partita",2,4,win->width-1,true);
   printW(win,"   Carica Partita",2,5,win->width-1,true);
   printW(win,"   Crediti",2,6,win->width-1,true);
 }
 
 void PrintGame(mWindow* win,struct Client* client,struct Player* player){
+    printW(win,"Ore:    Giorno:   ",2,2,win->width-1,false);
+    printInt(win,player->time,8,2);
+    printInt(win,player->day,19,2);
     printW(win,client->name,2,win->height-13,win->width-1,false);
     printW(win,"$",win->width-3,win->height-13,win->width-1,false);
-    printW(win,"Inventario: I | Consegna: C",4,win->height-5,win->width-1,false);
+    printW(win,"Inventario: I | Consegna: C",4,win->height-4,win->width-1,false);
+    printW(win,"Ordine                    Piatto",4,win->height-11,win->width-1,false);
     printInt(win,player->Credit,win->width-5,win->height-13);
     DrawSprite(win,sprite[client->sprite],10,10);
     DrawRectangle(win,2,win->height-12,win->width-4,10);
     int i;
     for(i = 0; i < client->numOrders; i++){
-      printW(win,FoodNames[client->order[i]],4,win->height-10 + i,win->width-6,true);
+      printW(win,FoodNames[client->order[i]],4,win->height-10 + i,win->width-6,false);
     }
     for(i = 0; i < 4; i++){
       if (client->selected[i] != -1)
-        printW(win,FoodNames[client->selected[i]],30,win->height-10 + i,win->width-6,true);
+        printW(win,FoodNames[client->selected[i]],30,win->height-10 + i,win->width-6,false);
     }
 }
 
 //se non va forse è colpa di questo
 void PrintInv(mWindow* win,struct Player* player){ 
   int i;
-  printW(win,"Inventario",win->width/2,2,win->width-1,false);
-
+  printW(win,"Inventario",win->width/2+14,2,win->width-1,false);
+  DrawRectangle(win,win->width/2+10,0,win->width/2,24);
   for (i = 0;i<ArrayLenght(FoodNames);i++){
     if (i < player->Lvl){
-      printW(win,FoodNames[i],win->width/2,i+3,win->width-1,false);
-      printInt(win,player->Inv[i],win->width/2 + 26, i + 3);
+      printW(win,FoodNames[i],win->width/2+14,i+3,win->width-1,false);
+      printInt(win,player->Inv[i],win->width/2 + 40, i + 3);
     }
     else
-      printW(win,"BLOCCATO",win->width/2,i+3,win->width-1,false);
+      printW(win,"BLOCCATO",win->width/2+14,i+3,win->width-1,false);
   }
-  printW(win,"Interagisci: E | Muovi: W/S",win->width/2,20,win->width-1,false);
-  printW(win,"Seleziona: F | Indietro: B",win->width/2,21,win->width-1,false);
+  printW(win,"Acquista: A | Muovi: W/S",win->width/2+14,20,win->width-1,false);
+  printW(win,"Servi: E | Togli: D | Indietro: B",win->width/2+14,21,win->width-1,false);
   Refresh(win);
 
 }
@@ -244,4 +248,10 @@ void PrintLvl(mWindow* win,struct Player* player){
     printInt(win,player->Lvl,57,win->height-13);
   else
     printW(win,"MAX",56,win->height-13,win->width-1,false); 
+}
+
+void PrintCredit(mWindow* win){
+  printW(win,"Miranda Perez Juan Carlos",4,8,win->width-1,true);
+  printW(win,"Luca Cavallaro",4,9,win->width-1,true);
+  printW(win,"Luca Molinari",4,10,win->width-1,true);
 }

@@ -14,8 +14,9 @@ const char ClientNames[][64] = {"Carlos","Greg","GianmaWalker C.","Principessa M
 
 struct Player{
 	int Credit;
-	int* Inv;   // se fai lo struct cambia questa
+	int Inv[ArrayLenght(FoodNames)];   // se fai lo struct cambia questa
 	int day;
+	int time;
 	int Lvl;
 	int Xp;
 	int XpNeeded;
